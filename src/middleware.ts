@@ -4,59 +4,29 @@ import { SessionApi } from "../types"
 
 export default withAuth(
     function middleware(request: NextRequestWithAuth) {
-        // console.log('request path:', request.nextUrl.pathname)
-        // console.log('token:', request.nextauth.token)
+        // Debug logs yang lebih detail
+        // console.log('Full Token Structure:', JSON.stringify(request.nextauth.token, null, 2))
 
-        // Mengakses role dari objek user di dalam token
-        const userRole = (request.nextauth.token as unknown as SessionApi)?.user?.role
+        const token = request.nextauth.token as any;
+        // console.log('Direct role check:', token?.role)
+        // console.log('Nested user role check:', token?.user?.role)
 
-        // Perubahan di sini: mencegah akses ke /user untuk peran "user"
-        // if (request.nextUrl.pathname.startsWith("/user")
-        //     && (userRole !== "admin" && userRole !== "su")) {
-        //     return NextResponse.rewrite(
-        //         new URL("/access-denied", request.url)
-        //     )
-        // }
+        // Coba kedua kemungkinan struktur
+        const userRole = token?.role || token?.user?.role
 
-        // if (request.nextUrl.pathname.startsWith("/kabid")
-        //     && (userRole !== "admin" && userRole !== "su")) {
-        //     return NextResponse.rewrite(
-        //         new URL("/access-denied", request.url)
-        //     )
-        // }
-        // if (request.nextUrl.pathname.startsWith("/narasumber")
-        //     && (userRole !== "admin" && userRole !== "su")) {
-        //     return NextResponse.rewrite(
-        //         new URL("/access-denied", request.url)
-        //     )
-        // }
+        if (request.nextUrl.pathname.startsWith("/market")) {
+            // console.log('Attempting market access with role:', userRole)
 
-        // if (request.nextUrl.pathname.startsWith("/opd")
-        //     && (userRole !== "admin" && userRole !== "su")) {
-        //     return NextResponse.rewrite(
-        //         new URL("/access-denied", request.url)
-        //     )
-        // }
-        // if (request.nextUrl.pathname.startsWith("/layanan")
-        //     && (userRole !== "admin" && userRole !== "su")) {
-        //     return NextResponse.rewrite(
-        //         new URL("/access-denied", request.url)
-        //     )
-        // }
-        // if (request.nextUrl.pathname.startsWith("/permohonan/proses-permohonan")
-        //     && (userRole !== "admin" && userRole !== "su")) {
-        //     return NextResponse.rewrite(
-        //         new URL("/access-denied", request.url)
-        //     )
-        // }
-        // if (request.nextUrl.pathname.startsWith("/kegiatan")
-        //     && (userRole !== "admin" && userRole !== "su")) {
-        //     return NextResponse.rewrite(
-        //         new URL("/access-denied", request.url)
-        //     )
-        // }
+            // Ubah pengecekan untuk lebih longgar
+            const allowedRoles = ['admin', 'su', 'ADMIN', 'SU', 'Admin', 'Su']
+            if (!allowedRoles.includes(userRole)) {
+                // console.log('Access denied. Role not in allowed list:', userRole)
+                return NextResponse.rewrite(
+                    new URL("/access-denied", request.url)
+                )
+            }
+        }
 
-        // Jika bukan kondisi di atas, izinkan akses
         return NextResponse.next()
     },
     {
@@ -69,5 +39,9 @@ export default withAuth(
 export const config = {
     matcher: [
         "/dashboard/:path*",
+        "/product/:path*",
+        "/market/:path*",
+        "/transaction/:path*",
+        "/rekap/:path*",
     ]
 }

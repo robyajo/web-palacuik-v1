@@ -17,10 +17,13 @@ import DrawerAlert from '../modal/drawer-alert';
 import { toast } from 'sonner';
 import { startTransition, useState } from 'react';
 import { API_LOGOUT } from '@/lib/api';
+import { LogOut } from 'lucide-react';
+import { isAxiosError } from 'axios';
+import axios from '@/lib/axios';
 export function UserNav() {
   const [logoutOpen, setLogOutOpen] = useState<boolean>(false);
   const { data: session } = useSession();
-
+  // console.log('session', session?.user.access_token);
   const handleOpenAlertLogout = () => {
     try {
       setLogOutOpen(true);
@@ -34,49 +37,49 @@ export function UserNav() {
   const handleLogout = async () => {
     startTransition(async () => {
       try {
-
-        const res = await fetch(API_LOGOUT, {
-          method: 'POST',
+        const response = await axios.post(API_LOGOUT, null, {
           headers: {
             'Authorization': `${session?.user?.token_type} ${session?.user?.access_token}`,
+            'Accept': 'application/json',
           },
         });
 
-        const responseData = await res.json();
-        console.log('responseData', responseData);
-        if (!res.ok) {
-          // Ekstrak pesan error dari respons JSON
-          const errorMessage = responseData.message || 'Terjadi kesalahan saat logout';
-
-          throw new Error(errorMessage);
-
-        }
-        toast.success(responseData.message, {
+        toast.success(response.data.message || 'Berhasil logout', {
           duration: 3000,
           position: "top-right",
         });
+
         signOut({
           callbackUrl: "/",
           redirect: true,
         });
 
-      } catch (err: unknown) {
-        console.error('Error tidak terduga:', err);
-        const pesanError = err instanceof Error ? err.message : 'Terjadi kesalahan yang tidak terduga';
-        toast.error(pesanError, {
-          position: "top-right",
-        });
+      } catch (error) {
+        console.error('Error:', error);
+        if (isAxiosError(error)) {
+          const pesanError = error.response?.data?.message ||
+            'Terjadi kesalahan saat logout';
+          toast.error(pesanError, {
+            position: "top-right",
+          });
+        } else {
+          toast.error('Terjadi kesalahan yang tidak terduga', {
+            position: "top-right",
+          });
+        }
       }
     });
   }
+
   if (session) {
     return (
       <>
-        <ResDEV response={session?.user?.access_token} />
+        {/* <ResDEV response={session?.user?.access_token} /> */}
         <DrawerAlert
           isOpen={logoutOpen}
           onClose={() => setLogOutOpen(false)}
-          onConfirm={() => signOut()}
+          // onConfirm={() => signOut()}
+          onConfirm={handleLogout}
           btnConfirmText='Ya'
           title="Keluar dari akun ini ?"
           description="Tindakan ini akan keluar dari akun. Apakah Anda yakin untuk keluar ?"
@@ -110,18 +113,12 @@ export function UserNav() {
                 Profile
                 <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                Billing
-                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                Settings
-                <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem>New Team</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleOpenAlertLogout()}>
+            <DropdownMenuItem
+              //  onClick={() => handleOpenAlertLogout()}
+              onClick={() => handleOpenAlertLogout()}
+            >
               Log out
               <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
             </DropdownMenuItem>

@@ -30,7 +30,7 @@ import {
   SidebarRail,
   useSidebar
 } from '@/components/ui/sidebar';
-import { navItems } from '@/constants/data';
+import { navItems, navItemsAdmin } from '@/constants/data';
 import {
   BadgeCheck,
   Bell,
@@ -49,12 +49,13 @@ import { toast } from 'sonner';
 import { API_LOGOUT } from '@/lib/api';
 import DrawerAlert from '../modal/drawer-alert';
 import axios from '@/lib/axios';
+import { isAxiosError } from 'axios';
 
 
 export const company = {
-  name: 'Acme Inc',
+  name: 'Palacuik App',
   logo: GalleryVerticalEnd,
-  plan: 'Enterprise'
+  plan: 'Transaction Rekap'
 };
 
 export default function AppSidebar() {
@@ -75,38 +76,36 @@ export default function AppSidebar() {
   const handleLogout = async () => {
     React.startTransition(async () => {
       try {
-
-        const res = await fetch(API_LOGOUT, {
-          method: 'POST',
+        const response = await axios.post(API_LOGOUT, null, {
           headers: {
             'Authorization': `${session?.user?.token_type} ${session?.user?.access_token}`,
+            'Accept': 'application/json',
           },
         });
 
-        const responseData = await res.json();
-        console.log('responseData', responseData);
-        if (!res.ok) {
-          // Ekstrak pesan error dari respons JSON
-          const errorMessage = responseData.message || 'Terjadi kesalahan saat logout';
-
-          throw new Error(errorMessage);
-
-        }
-        toast.success(responseData.message, {
+        toast.success(response.data.message || 'Berhasil logout', {
           duration: 3000,
           position: "top-right",
         });
+
         signOut({
           callbackUrl: "/",
           redirect: true,
         });
 
-      } catch (err: unknown) {
-        console.error('Error tidak terduga:', err);
-        const pesanError = err instanceof Error ? err.message : 'Terjadi kesalahan yang tidak terduga';
-        toast.error(pesanError, {
-          position: "top-right",
-        });
+      } catch (error) {
+        console.error('Error:', error);
+        if (isAxiosError(error)) {
+          const pesanError = error.response?.data?.message ||
+            'Terjadi kesalahan saat logout';
+          toast.error(pesanError, {
+            position: "top-right",
+          });
+        } else {
+          toast.error('Terjadi kesalahan yang tidak terduga', {
+            position: "top-right",
+          });
+        }
       }
     });
   }
@@ -133,6 +132,66 @@ export default function AppSidebar() {
           </div>
         </SidebarHeader>
         <SidebarContent className='overflow-x-hidden'>
+          {session?.user?.role === 'admin' && (
+            <SidebarGroup>
+              <SidebarGroupLabel>Admin</SidebarGroupLabel>
+              <SidebarMenu>
+                {navItemsAdmin.map((item) => {
+                  const Icon = item.icon ? Icons[item.icon as keyof typeof Icons] : Icons.logo;
+                  return item?.items && item?.items?.length > 0 ? (
+                    <Collapsible
+                      key={item.title}
+                      asChild
+                      defaultOpen={item.isActive}
+                      className='group/collapsible'
+                    >
+                      <SidebarMenuItem>
+                        <CollapsibleTrigger asChild>
+                          <SidebarMenuButton
+                            tooltip={item.title}
+                            isActive={pathname === item.url}
+                          >
+                            {item.icon && <Icon />}
+                            <span>{item.title}</span>
+                            <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
+                          </SidebarMenuButton>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <SidebarMenuSub>
+                            {item.items?.map((subItem: any) => (
+                              <SidebarMenuSubItem key={subItem.title}>
+                                <SidebarMenuSubButton
+                                  asChild
+                                  isActive={pathname === subItem.url}
+                                >
+                                  <Link href={subItem.url}>
+                                    <span>{subItem.title}</span>
+                                  </Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      </SidebarMenuItem>
+                    </Collapsible>
+                  ) : (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        tooltip={item.title}
+                        isActive={pathname === item.url}
+                      >
+                        <Link href={item.url}>
+                          <Icon />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroup>
+          )}
           <SidebarGroup>
             <SidebarGroupLabel>Overview</SidebarGroupLabel>
             <SidebarMenu>
@@ -257,14 +316,7 @@ export default function AppSidebar() {
                       <BadgeCheck />
                       Account
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <CreditCard />
-                      Billing
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Bell />
-                      Notifications
-                    </DropdownMenuItem>
+
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleOpenAlertLogout}>

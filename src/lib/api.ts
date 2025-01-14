@@ -9,3 +9,7 @@ export const API_LOGOUT = compare_api + "/auth/logout";
 
 // =============== PERMISSION ===============
 export const API_PROFILE = `${compare_api}/profile`;
+
+// =============== MARKET PLACE ===============
+export const API_MARKET = `${compare_api}/market-place`;
+export const API_MARKET_SHOW = `${compare_api}/market-place/show`;

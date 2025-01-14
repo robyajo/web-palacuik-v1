@@ -55,8 +55,6 @@ export interface ResponseApi {
 
 
 
-
-
 export interface NavItem {
     title: string;
     url: string;
@@ -90,5 +88,3 @@ export interface FooterItem {
 export type MainNavItem = NavItemWithOptionalChildren;
 
 export type SidebarNavItem = NavItemWithChildren;
-
-export type IconKey = keyof typeof Icons;

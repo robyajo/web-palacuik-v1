@@ -63,7 +63,7 @@ export function FormAuthSignUp({ className, ...props }: React.ComponentProps<"di
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 md:p-8 space-y-6">
                             <div className="text-center">
-                                <h1 className="text-2xl font-bold">Register</h1>
+                                <h1 className="text-2xl font-bold">Sign Up</h1>
                                 <p className="text-muted-foreground">Daftarkan ke akun Anda</p>
                             </div>
 
@@ -114,7 +114,7 @@ export function FormAuthSignUp({ className, ...props }: React.ComponentProps<"di
 
                     <div className="relative hidden bg-muted md:block">
                         <img
-                            src="https://images.unsplash.com/photo-1534404059038-296dc0178c3d?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3"
+                            src="https://images.unsplash.com/photo-1514820402329-de527fdd2e6d?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                             alt="Login background"
                             className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
                         />

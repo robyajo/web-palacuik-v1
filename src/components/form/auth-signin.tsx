@@ -63,7 +63,7 @@ export function FormAuthSignIn({ className, ...props }: React.ComponentProps<"di
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 md:p-8 space-y-6">
                             <div className="text-center">
-                                <h1 className="text-2xl font-bold">Login</h1>
+                                <h1 className="text-2xl font-bold">Sign In</h1>
                                 <p className="text-muted-foreground">Masuk ke akun Anda</p>
                             </div>
 

@@ -26,11 +26,14 @@ import {
   SunMedium,
   Trash,
   Twitter,
+  ShoppingCart,
   User,
   UserCircle2Icon,
   UserPen,
   UserX2Icon,
-  X
+  X,
+  Archive,
+  ShoppingBag
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -62,6 +65,9 @@ export const Icons = {
   help: HelpCircle,
   pizza: Pizza,
   sun: SunMedium,
+  transaction: ShoppingCart,
+  rekap: Archive,
+  marketplace: ShoppingBag,
   moon: Moon,
   laptop: Laptop,
   gitHub: ({ ...props }: LucideProps) => (
