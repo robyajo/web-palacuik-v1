@@ -7,19 +7,18 @@ type ApiData = {
     role: string;
 }
 export interface UserApi {
-    id: number;
-    uuid: string;
-    name: string;
-    email: string;
-    role: string;
-    token: string;
+    expires: ISODateString
+    user: {
+        id: number;
+        uuid: string;
+        name: string;
+        email: string;
+        role: string;
+        access_token: string;
+        token_type: string;
+    }
 }
-export interface SessionApi extends UserApi {
-    user: UserApi;
-    session: UserApi;
-    accessToken: string;
-    expires: ISODateString;
-}
+
 
 export interface UserSessionProps {
     user: {
@@ -33,18 +32,17 @@ export interface UserSessionProps {
 
 
 export interface UserApi {
-    id: number;
-    name: string;
-    profile_photo_url: string;
-    email: string;
-    role: string;
+    user: {
+        id: number;
+        uuid: string;
+        name: string;
+        email: string;
+        role: string;
+        access_token: string;
+        token_type: string;
+    }
+}
 
-    token: string;
-}
-export interface SessionApi extends UserApi {
-    user: UserApi;
-    session: UserApi;
-}
 // RESPON API MASYARAKAT
 export interface ResponseApi {
     success: boolean;

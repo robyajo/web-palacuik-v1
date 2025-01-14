@@ -1,6 +1,5 @@
 import { withAuth, NextRequestWithAuth } from "next-auth/middleware"
 import { NextResponse } from "next/server"
-import { SessionApi } from "../types"
 
 export default withAuth(
     function middleware(request: NextRequestWithAuth) {

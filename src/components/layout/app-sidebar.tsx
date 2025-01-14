@@ -33,10 +33,8 @@ import {
 import { navItems, navItemsAdmin } from '@/constants/data';
 import {
   BadgeCheck,
-  Bell,
   ChevronRight,
   ChevronsUpDown,
-  CreditCard,
   GalleryVerticalEnd,
   LogOut
 } from 'lucide-react';
@@ -62,7 +60,6 @@ export default function AppSidebar() {
   const [logoutOpen, setLogOutOpen] = React.useState<boolean>(false);
   const { data: session } = useSession();
   const pathname = usePathname();
-  const { state, isMobile } = useSidebar();
   const handleOpenAlertLogout = () => {
     try {
       setLogOutOpen(true);

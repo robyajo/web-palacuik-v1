@@ -15,7 +15,7 @@ import React, { Suspense, useEffect, useState } from 'react'
 
 export default function PageCompoent() {
     const { data: session } = useSession();
-    const [dataFecth, setDataFecth] = useState<any | null>(null)
+    const [dataFecth, setDataFecth] = useState<[]>([])
     const [loading, setLoading] = useState(true)
     const [errorFecth, setErrorFecth] = useState<string | null>(null)
     useEffect(() => {

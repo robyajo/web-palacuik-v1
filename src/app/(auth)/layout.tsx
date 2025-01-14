@@ -1,4 +1,4 @@
-import ThemeToggle from '@/components/ThemeToggle/theme-toggle'
+import ThemeToggle from '@/components/layout/ThemeToggle/theme-toggle';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import React from 'react'

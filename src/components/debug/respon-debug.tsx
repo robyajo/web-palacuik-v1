@@ -7,7 +7,6 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion"
-import { Button } from '@/components/ui/button'
 import { FormInputIcon, Terminal } from 'lucide-react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 interface ResDevProps {
